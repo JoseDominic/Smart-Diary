@@ -1,1 +1,1 @@
-# designproject
+# An online personal diary system
