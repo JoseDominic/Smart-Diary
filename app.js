@@ -13,7 +13,7 @@ require('./config/passport')(passport);
 
 //DB config
 require('dotenv').config(); //for setting environment variables on server
-const uri = process.env.ATLAS_URI;
+const uri = process.env.LOCAL_URI;//atlas uri stored in ATLAS_URI
 mongoose.connect(uri,{useNewUrlParser:true ,useUnifiedTopology: true})
     .then(() => console.log("mongodb connected"))
     .catch(err => console.log(err));
@@ -45,12 +45,16 @@ app.use((req,res,next) => {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
     res.locals.error = req.flash('error');
+    res.locals.result = req.result;
     next();
 });
 
 //Routes
 app.use('/',require('./routes/index'));
 app.use('/users',require('./routes/users'));
+app.use('/entries',require('./routes/entries'));
+
+
 
 const PORT = process.env.PORT || 5000;
 

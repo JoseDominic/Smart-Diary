@@ -1,3 +1,11 @@
-<h1 class="mt-4">Dashboard</h1>
-<p class="lead mb-3">Welcome <%=name%></p>
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
+<% include ./partials/dashboardnavbar.ejs %>
+<% include ./partials/messages %>
+<% if (result!=[] && typeof result !='undefined') { %>
+    <ul class="list-group">
+        <% result.forEach(myFunction); %>
+        <% function myFunction(item, index) { %> 
+            <li class="list-group-item"><a href='/entries/<%=item.id%>'><%=item.title%></a></li> 
+        <% } %>
+    </ul>    
+
+<% } %>
