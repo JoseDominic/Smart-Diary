@@ -1,26 +1,32 @@
 {
-  "name": "design project",
-  "version": "0.0.0",
-  "description": "A sample Node.js app",
-  "engines": {
-    "node": "10.x"
-  },
-  "main": "index.js",
+  "name": "node_passport_login",
+  "version": "1.0.0",
+  "description": "Login system using node",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js"
-  },
-  "devDependencies": {
-    "request": "^2.81.0",
-    "tape": "^4.7.0"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/JoseDominic/designproject"
+    "url": "git+https://github.com/JoseDominic/NodeJS_login_system.git"
   },
-  "keywords": [
-    "node",
-    "heroku",
-    "express"
-  ],
-  "license": "MIT"
+  "author": "Jose Dominic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoseDominic/NodeJS_login_system/issues"
+  },
+  "homepage": "https://github.com/JoseDominic/NodeJS_login_system#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^8.1.0",
+    "ejs": "^2.7.1",
+    "express": "^4.17.1",
+    "express-ejs-layouts": "^2.5.0",
+    "express-session": "^1.16.2",
+    "mongoose": "^5.7.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  }
 }
