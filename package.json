@@ -1,5 +1,5 @@
 {
-  "name": "Diarygenie",
+  "name": "diarygenie",
   "version": "1.0.0",
   "description": "Digital diary",
   "main": "app.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoseDominic/NodeJS_login_system.git"
+    "url": "git+https://github.com/JoseDominic/Smart-Diary"
   },
   "author": "Jose Dominic",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JoseDominic/NodeJS_login_system/issues"
+    "url": "https://github.com/JoseDominic/Smart-Diary/issues"
   },
-  "homepage": "https://github.com/JoseDominic/NodeJS_login_system#readme",
+  "homepage": "https://github.com/JoseDominic/Smart-Diary#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "connect-flash": "^0.1.1",
