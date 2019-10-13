@@ -1,5 +1,5 @@
 const express = require('express');
-const expressLayouts = require('express-ejs-layouts'); 
+const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const session = require('express-session');
@@ -22,6 +22,7 @@ mongoose.connect(uri,{useNewUrlParser:true ,useUnifiedTopology: true})
 //EJS
 app.use(expressLayouts);
 app.set('view engine','ejs');
+app.use(express.static(__dirname+'/public'));
 
 //Express Bodyparser
 app.use(express.urlencoded({extended:true}));
@@ -33,7 +34,7 @@ app.use(session({
     saveUninitialized: true,
   }));
 
-//Passport middleware for authentication and login   
+//Passport middleware for authentication and login
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -59,5 +60,3 @@ app.use('/entries',require('./routes/entries'));
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT,console.log(`Server started on port ${PORT}`));
-
-
