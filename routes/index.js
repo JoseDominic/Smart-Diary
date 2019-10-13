@@ -10,7 +10,7 @@ router.get('/',(req,res)=>res.render('welcome',{ layout: false }));
 
 //Pass in ensureAuthenticated object to all routes that need protection
 
-router.get('/dashboard',ensureAuthenticated,(req,res) => 
+router.get('/dashboard',ensureAuthenticated,(req,res) =>
     res.render('dashboard',{ //sending the name of user along with res to access username from dashboard
         name:req.user.name
     }));
