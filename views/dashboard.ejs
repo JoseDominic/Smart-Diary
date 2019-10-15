@@ -1,11 +1,17 @@
-<% include ./partials/dashboardnavbar.ejs %>
+<% include ./partials/dashboardnavbar %>
 <% include ./partials/messages %>
 <% if (result!=[] && typeof result !='undefined') { %>
-    <ul class="list-group">
-        <% result.forEach(myFunction); %>
-        <% function myFunction(item, index) { %> 
-            <li class="list-group-item"><a href='/entries/<%=item.id%>'><%=item.date.toDateString()%> <%=item.title%> </a></li> 
-        <% } %>
-    </ul>    
+    <ul class="list-group"> 
+        <% result.forEach(myfunction); %>
+        <%function myfunction(item,index) { %>
+            <% var d = new Date() %>
+            <% var prevMonday = new Date(); %>
+            <% prevMonday.setDate(prevMonday.getDate() - (prevMonday.getDay() + 6) % 7);%>
+            <% prevMonday.setHours(0,0,0); %>
+            <% if(item.date > prevMonday) {   %>   
+            <li class="list-group-item"><a href='/entries/<%=item.id%>'><%=item.date.toDateString()%> <%=item.title%> </a></li>
+               
+        <% } } %>    
+    </ul>     
 
 <% } %>
