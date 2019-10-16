@@ -7,7 +7,7 @@ const { check, validationResult } = require('express-validator');
 const Entry = require('../models/Entry');
 const User = require('../models/User');
 
-//route to view entries
+//route to view current week entries
 router.get('/',ensureAuthenticated,(req,res) =>{
   User.findById(req.user.id,(err,user) => {
     if(err) throw err;
@@ -20,6 +20,11 @@ router.get('/',ensureAuthenticated,(req,res) =>{
       })
     }
   })
+});
+
+//route to view all entries
+router.get('/viewall',ensureAuthenticated,(req,res) =>{
+  res.render('allentryview',{name:req.user.name});  
 });
 
 //render view for adding entries
