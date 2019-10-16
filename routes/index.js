@@ -5,10 +5,10 @@ const {ensureAuthenticated} = require('../config/auth');
 
 //Welcome Page
 <<<<<<< HEAD
+
 router.get('/',(req,res)=>res.render('welcome',{layout:false}));
-=======
+
 router.get('/',(req,res)=>res.render('welcome',{ layout: false }));
->>>>>>> upstream/master
 
 //User Dashboard
 
