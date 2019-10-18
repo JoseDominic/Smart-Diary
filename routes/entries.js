@@ -7,8 +7,23 @@ const { check, validationResult } = require('express-validator');
 const Entry = require('../models/Entry');
 const User = require('../models/User');
 
+//route to view all entries
+router.get('/',ensureAuthenticated,(req,res) => {
+  User.findById(req.user.id,(err,user) => {
+    if(err) throw err;
+    if(user){
+      let userid = user.id
+      Entry.find({author:userid},(err,result) => {
+        if(err) throw err;
+        //console.log(result);
+        res.render('allentryview',{result:result,name:req.user.name});
+      })
+    }
+  })
+})
+
 //route to view current week entries
-router.get('/',ensureAuthenticated,(req,res) =>{
+router.get('/thisweek',ensureAuthenticated,(req,res) =>{
   User.findById(req.user.id,(err,user) => {
     if(err) throw err;
     if(user){
@@ -22,9 +37,23 @@ router.get('/',ensureAuthenticated,(req,res) =>{
   })
 });
 
-//route to view all entries
-router.get('/viewall',ensureAuthenticated,(req,res) =>{
-  res.render('allentryview',{name:req.user.name});  
+//route to view search diary option
+router.get('/search',ensureAuthenticated,(req,res) =>{
+  res.render('searchentry',{name:req.user.name});  
+});
+
+//route to search diary for entry with date or keyword
+//this needs to be completed
+router.post('/search',ensureAuthenticated,(req,res) => {
+  const {date,keyword} =req.body;
+  if(typeof date !='undefined'){
+    console.log(date);
+    Entry.find({date:date},(err,result)=>{
+      if(err) throw err;
+      console.log(result);
+      res.render('allentryview',{result:result,name:req.user.name});
+    });
+  }
 });
 
 //render view for adding entries
