@@ -7,6 +7,15 @@ const { check, validationResult } = require('express-validator');
 const Entry = require('../models/Entry');
 const User = require('../models/User');
 
+//adding a function addDays to Date object to add days to date
+Date.prototype.addDays = function(days) {
+  var date = new Date(this.valueOf());
+  date.setDate(date.getDate() + days);
+  return date;
+}
+
+//Routes
+
 //route to view all entries
 router.get('/',ensureAuthenticated,(req,res) => {
   User.findById(req.user.id,(err,user) => {
@@ -46,13 +55,34 @@ router.get('/search',ensureAuthenticated,(req,res) =>{
 //this needs to be completed
 router.post('/search',ensureAuthenticated,(req,res) => {
   const {date,keyword} =req.body;
-  if(typeof date !='undefined'){
-    console.log(date);
-    Entry.find({date:date},(err,result)=>{
+  if(date && keyword){
+    d = new Date(date);
+    //console.log(d);
+    Entry.find({author:req.user.id,date:{ "$gte" : d, "$lt" : d.addDays(1) },body:{ $regex: keyword}},(err,result)=>{
+      if(err) throw err;
+      //console.log(result);
+      res.render('allentryview',{result:result,name:req.user.name});
+    });
+  }
+  else if(date){
+    d = new Date(date);
+    //console.log(d);
+    Entry.find({author:req.user.id,date:{ "$gte" : d, "$lt" : d.addDays(1) }},(err,result)=>{
+      if(err) throw err;
+      //console.log(result);
+      res.render('allentryview',{result:result,name:req.user.name});
+    });
+  }
+  else if(keyword){ //pure keyword search
+    Entry.find({author:req.user.id,body:{ $regex: keyword}},(err,result) => {
       if(err) throw err;
       console.log(result);
       res.render('allentryview',{result:result,name:req.user.name});
-    });
+    })
+  }
+  else{
+    req.flash('success_msg','Please fill atleast one field');
+    res.redirect('/entries/search');
   }
 });
 
