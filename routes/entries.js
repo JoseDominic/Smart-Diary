@@ -37,7 +37,6 @@ router.get('/thisweek',ensureAuthenticated,(req,res) =>{
   })
 });
 
-<<<<<<< HEAD
 //route to view all entries
 router.get('/viewall',ensureAuthenticated,(req,res) =>{
   res.render('allentryview',{name:req.user.name});
@@ -55,10 +54,9 @@ router.get('/pubpost',ensureAuthenticated,(req,res) =>{
       })
     }
   })
-=======
 //route to view search diary option
 router.get('/search',ensureAuthenticated,(req,res) =>{
-  res.render('searchentry',{name:req.user.name});  
+  res.render('searchentry',{name:req.user.name});
 });
 
 //route to search diary for entry with date or keyword
@@ -73,7 +71,6 @@ router.post('/search',ensureAuthenticated,(req,res) => {
       res.render('allentryview',{result:result,name:req.user.name});
     });
   }
->>>>>>> upstream/master
 });
 
 //render view for adding entries
