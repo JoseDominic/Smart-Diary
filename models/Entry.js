@@ -10,6 +10,10 @@ const entrySchema = mongoose.Schema({
     type:String,
     required:true
   },
+  authorname:{
+    type:String,
+    required:true
+  },
   body:{
     type:String,
     required:true
