@@ -37,23 +37,11 @@ router.get('/thisweek',ensureAuthenticated,(req,res) =>{
   })
 });
 
-//route to view all entries
-router.get('/viewall',ensureAuthenticated,(req,res) =>{
-  res.render('allentryview',{name:req.user.name});
-});
-//route to view public Posts
+//route to public posts(not completed)
 router.get('/pubpost',ensureAuthenticated,(req,res) =>{
-  User.findById(req.user.id,(err,user) => {
-    if(err) throw err;
-    if(user){
-      let userid = user.id
-      Entry.find({author:userid},(err,result) => {
-        if(err) throw err;
-        //console.log(result);
-        res.render('dashboard',{result:result,name:req.user.name});
-      })
-    }
-  })
+        res.render('pubpost');
+      });
+
 //route to view search diary option
 router.get('/search',ensureAuthenticated,(req,res) =>{
   res.render('searchentry',{name:req.user.name});
