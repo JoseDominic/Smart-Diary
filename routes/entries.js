@@ -50,6 +50,13 @@ router.get('/thisweek',ensureAuthenticated,(req,res) =>{
 router.get('/pubpost',ensureAuthenticated,(req,res) =>{
         res.render('pubpost');
       });
+//route to get all public post from databse(not completed)
+router.get('/pubpost', async (req, res) => {
+    const posts = await Post.find({})
+    res.render('index', {
+        posts
+    })
+});
 
 //route to view search diary option
 router.get('/search',ensureAuthenticated,(req,res) =>{
