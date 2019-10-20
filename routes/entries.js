@@ -48,11 +48,13 @@ router.get('/thisweek',ensureAuthenticated,(req,res) =>{
 
 //route to view public posts
 router.get('/public',ensureAuthenticated,(req,res) => {
-  Entry.find({public:true},(err,result) =>{
-    if(err) throw err;
-    res.render('public',{name:req.user.name,result:result});
-  })
-})
+  let usernames =[];
+  Entry.find({public:true})
+    .then(result =>{
+      res.render('public',{usernames:usernames,name:req.user.name,result:result});  
+      }) 
+    .catch(err => console.log(err));
+  });
 
 //route to view search diary option
 router.get('/search',ensureAuthenticated,(req,res) =>{
@@ -83,7 +85,7 @@ router.post('/search',ensureAuthenticated,(req,res) => {
   else if(keyword){ //pure keyword search
     Entry.find({author:req.user.id,body:{ $regex: keyword}},(err,result) => {
       if(err) throw err;
-      console.log(result);
+      //console.log(result);
       res.render('allentryview',{result:result,name:req.user.name});
     })
   }
@@ -129,6 +131,7 @@ router.post('/add',ensureAuthenticated,(req,res) => {
     entry.author = req.user.id;
     entry.body = req.body.entry;
     entry.date = date;
+    entry.authorname = req.user.name;
     if(visibility=='public'){
       entry.public = true;
       //console.log(visibility);
