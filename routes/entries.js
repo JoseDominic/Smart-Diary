@@ -46,6 +46,7 @@ router.get('/thisweek',ensureAuthenticated,(req,res) =>{
   })
 });
 
+<<<<<<< HEAD
 //route to public posts(not completed)
 router.get('/pubpost',ensureAuthenticated,(req,res) =>{
         res.render('pubpost');
@@ -57,6 +58,15 @@ router.get('/pubpost', async (req, res) => {
         posts
     })
 });
+=======
+//route to view public posts
+router.get('/public',ensureAuthenticated,(req,res) => {
+  Entry.find({public:true},(err,result) =>{
+    if(err) throw err;
+    res.render('public',{name:req.user.name,result:result});
+  })
+})
+>>>>>>> upstream/master
 
 //route to view search diary option
 router.get('/search',ensureAuthenticated,(req,res) =>{
@@ -64,7 +74,6 @@ router.get('/search',ensureAuthenticated,(req,res) =>{
 });
 
 //route to search diary for entry with date or keyword
-//this needs to be completed
 router.post('/search',ensureAuthenticated,(req,res) => {
   const {date,keyword} =req.body;
   if(date && keyword){
@@ -114,7 +123,7 @@ router.get('/:id',ensureAuthenticated,(req,res) => {
 
 //add new entry
 router.post('/add',ensureAuthenticated,(req,res) => {
-  const { title,entry } = req.body;
+  const { title,entry,visibility } = req.body;
   const date = new Date();
   let errors = [];
     //Check required fields
@@ -134,6 +143,14 @@ router.post('/add',ensureAuthenticated,(req,res) => {
     entry.author = req.user.id;
     entry.body = req.body.entry;
     entry.date = date;
+    if(visibility=='public'){
+      entry.public = true;
+      //console.log(visibility);
+    }
+    else{
+      //console.log(visibility);
+      entry.public = false;
+    }
 
     entry.save(function(err){
       if(err){

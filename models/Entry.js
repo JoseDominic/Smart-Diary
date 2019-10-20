@@ -15,6 +15,7 @@ const entrySchema = mongoose.Schema({
     required:true
   },
   date:{type:Date,required:true},
+  public:false,
 
 
 });
