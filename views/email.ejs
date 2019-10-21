@@ -1,8 +1,9 @@
 <% include ./partials/dashboardnavbar %>
+<% include ./partials/messages %>
 <form action='/email' method="POST">
     <div class="form-group">
       <label for="exampleFormControlInput1">Title</label>
-      <input type="text" name="title" class="form-control" id="exampleFormControlInput1" placeholder="Title" required>
+      <input type="text" name="title" class="form-control" value="<%= typeof title != 'undefined' ? title : '' %>" id="exampleFormControlInput1" placeholder="Title" required>
     </div>
     <div class="form-group">
       <label for="exampleFormControlTextarea1">Body</label>
@@ -10,7 +11,7 @@
     </div>
     <div class="form-group">
         <label for="exampleFormControlInput1">What date should you get this?</label>
-        <input type="date" name="date" class="form-control col-sm-2" id="exampleFormControlInput1"  required>
+        <input type="date" name="date" min=<%=maxDate%> class="form-control col-sm-2" id="maildate"  required>
         <label for="mailtime">Time</label>
         <input type="time" id="mailtime" class="form-control col-sm-2" name="time" required>
     </div>
