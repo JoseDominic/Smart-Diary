@@ -26,11 +26,16 @@ router.get('/',ensureAuthenticated,(req,res) =>{
 //schedule the email
 //NEEDS TO BE COMPLETED (under progress...)
 router.post('/',ensureAuthenticated,(req,res) => {
-    const {title,email,date} =req.body;
+    const {title,email,date,time} =req.body;
+    var temp = time.split(':');
+    var hour = parseInt(temp[0],10);
+    var minute = parseInt(temp[1],10);
+    //console.log(hour,minute);
     var mailAccountUser = 'gamerthegreat007@gmail.com'
-    var mailAccountPassword = '04822208493@g'
+    var mailAccountPassword = process.env.PASSWORD;
 
     // //for testing  purpose using mailtrap
+    
     // var transport = nodemailer.createTransport({
     //     host: "smtp.mailtrap.io",
     //     port: 2525,
@@ -46,7 +51,7 @@ router.post('/',ensureAuthenticated,(req,res) => {
         user: mailAccountUser,
         pass: mailAccountPassword
     }
-}));
+    }));
 
 
       const message = {
@@ -55,8 +60,12 @@ router.post('/',ensureAuthenticated,(req,res) => {
         subject: title, // Subject line
         text: email // Plain text body
     };
+    var mailDate = new Date(date); 
+    //console.log(hour,minute);
+    mailDate.setHours(hour);
+    mailDate.setMinutes(minute);
+    //console.log(mailDate); //this date is in UTC
     
-    var mailDate = new Date(date);
     
     //scheduling job to sent email at a given time
     nodeSchedule.scheduleJob(mailDate,() =>{
@@ -65,12 +74,13 @@ router.post('/',ensureAuthenticated,(req,res) => {
               console.log(err)
             } else {
               console.log(info);
+              console.log('email sent successfully');
             }
             transport.close();
         });
-        console.log('email sent successfully');
+        
     });
-    
+    req.flash('success_msg','Email scheduled successfully')
     res.redirect('/dashboard');  
 
 });
