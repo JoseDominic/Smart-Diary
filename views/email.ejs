@@ -1,0 +1,16 @@
+<% include ./partials/dashboardnavbar %>
+<form action='/email' method="POST">
+    <div class="form-group">
+      <label for="exampleFormControlInput1">Title</label>
+      <input type="text" name="title" class="form-control" id="exampleFormControlInput1" placeholder="Title" required>
+    </div>
+    <div class="form-group">
+      <label for="exampleFormControlTextarea1">Body</label>
+      <textarea class="form-control" name="email" placeholder="What do you want to tell yourself?" id="exampleFormControlTextarea1" rows="5" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="exampleFormControlInput1">What date should you get this?</label>
+        <input type="date" name="date" class="form-control" id="exampleFormControlInput1"  required>
+    </div>
+    <button type="submit" class="btn btn-primary">Schedule email</button>
+  </form>

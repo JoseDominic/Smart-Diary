@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const {ensureAuthenticated} = require('../config/auth');
-const { check, validationResult } = require('express-validator');
 
 //Models
 const Entry = require('../models/Entry');
