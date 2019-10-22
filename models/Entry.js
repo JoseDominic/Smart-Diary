@@ -20,7 +20,7 @@ const entrySchema = mongoose.Schema({
   },
   date:{type:Date,required:true},
   public:false,
-
+  img:{},
 
 });
 

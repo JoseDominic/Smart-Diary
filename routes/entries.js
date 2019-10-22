@@ -1,6 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const {ensureAuthenticated} = require('../config/auth');
+const fs = require('fs');
+const multer = require('multer');
+
+// SET STORAGE using multer
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname + '-' + Date.now())
+  }
+})
+
+const upload = multer({storage:storage});
 
 //Models
 const Entry = require('../models/Entry');
@@ -129,8 +143,8 @@ router.get('/public/:id',ensureAuthenticated,(req,res) => {
 });
 
 //add new entry
-router.post('/add',ensureAuthenticated,(req,res) => {
-  const { title,entry,visibility } = req.body;
+router.post('/add',upload.single('picture'),ensureAuthenticated,(req,res) => {
+  const { title,entry,visibility} = req.body;
   const date = new Date();
   let errors = [];
     //Check required fields
@@ -151,6 +165,21 @@ router.post('/add',ensureAuthenticated,(req,res) => {
     entry.body = req.body.entry;
     entry.date = date;
     entry.authorname = req.user.name;
+
+    //handling uploaded image
+    console.log(req.file);
+    var img = fs.readFileSync(req.file.path);
+    var encode_image = img.toString('base64');
+    // Define a JSONobject for the image attributes for saving to database
+  
+    var finalImg = {
+      contentType: req.file.mimetype,
+      image: Buffer.from(encode_image, 'base64')
+    };
+    entry.img = finalImg;
+    //console.log(finalImg);
+    //console.log('database'+entry.img.contentType);  
+
     if(visibility=='public'){
       entry.public = true;
       //console.log(visibility);
@@ -165,6 +194,10 @@ router.post('/add',ensureAuthenticated,(req,res) => {
         console.log(err);
         return;
       } else {
+      
+        fs.unlink(req.file.path, (err) => {
+              if (err) throw err}); //delete the img once saved to db
+            
         req.flash('success_msg','Diary Added');
         res.redirect('/dashboard');
       }

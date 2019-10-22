@@ -2,4 +2,5 @@
 <h3><%= diary.date.toDateString() %> </h3>
 <p>By <%= diary.authorname %></p>
 <h2><%= diary.title %></h2>
+<img  class="img-fluid" src="data:<%=diary.img.contentType%>;base64,<%=diary.img.image.toString('base64')%>" >
 <p class="font-weight-lighter" style='font-size:25px;font-family:"Monotype Corsiva", cursive;white-space: pre-wrap;'><%= diary.body %></p>
