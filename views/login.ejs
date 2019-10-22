@@ -1,7 +1,25 @@
-<div class="row mt-5">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DIARYGENIE</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <style type="text/css" media="screen">
+  		body {
+        background-image: url("/images/pic.jpg");
+        background-size: cover;
+        background-size:1890px 1080px;
+  			text-decoration-color: white;
+  			font-size:17px;
+  		}
+  	</style>
+
+  </head>
+<body>
+  <div class="row mt-5">
     <div class="col-md-6 m-auto">
-      <div class="card card-body">
-        <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>  Login</h1>
+      <div class="card card-body text-white bg-dark">
+        <h1 class="text-center  mb-3"><i class="fas fa-sign-in-alt"></i>  Login</h1>
         <% include ./partials/messages %>
         <form action="/users/login" method="POST">
           <div class="form-group">
@@ -24,7 +42,7 @@
               placeholder="Enter Password"
             />
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Login</button>
+          <button type="submit" class="btn btn-success btn-block">Login</button>
         </form>
         <p class="lead mt-4">
           No Account? <a href="/users/register">Register</a>
@@ -32,3 +50,5 @@
       </div>
     </div>
   </div>
+</body>
+</html>

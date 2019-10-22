@@ -57,7 +57,7 @@ router.get('/public',ensureAuthenticated,(req,res) => {
 
 //route to view search diary option
 router.get('/search',ensureAuthenticated,(req,res) =>{
-  res.render('searchentry',{name:req.user.name});  
+  res.render('searchentry',{name:req.user.name});
 });
 
 //route to search diary for entry with date or keyword
@@ -160,9 +160,9 @@ router.post('/add',ensureAuthenticated,(req,res) => {
         res.redirect('/dashboard');
       }
     });
-    
+
   }
-    
+
 });
 
 // Load Edit diary Form
