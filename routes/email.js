@@ -45,7 +45,7 @@ router.post('/',ensureAuthenticated,(req,res) => {
     var hour = parseInt(temp[0],10);
     var minute = parseInt(temp[1],10);
     //console.log(hour,minute);
-    var mailAccountUser = 'gamerthegreat007@gmail.com'
+    var mailAccountUser = 'diarygenie123@gmail.com'
     var mailAccountPassword = process.env.PASSWORD;
 
     // //for testing  purpose using mailtrap
