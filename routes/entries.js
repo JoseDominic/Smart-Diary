@@ -105,7 +105,7 @@ router.post('/search',ensureAuthenticated,(req,res) => {
     });
   }
   else if(keyword){ //pure keyword search
-    Entry.find({author:req.user.id,body:{ $regex: keyword}},(err,result) => {
+    Entry.find({$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]},(err,result) => {
       if(err) throw err;
       //console.log(result);
       res.render('allentryview',{result:result,name:req.user.name});
