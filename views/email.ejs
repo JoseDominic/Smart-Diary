@@ -1,6 +1,7 @@
 <% include ./partials/dashboardnavbar %>
 <% include ./partials/messages %>
-<form action='/email' method="POST">
+<p>Genie will sent this letter to your registered e-mail at the specified time</p>
+<form action='/email' method="POST">  
     <div class="form-group">
       <label for="exampleFormControlInput1">Title</label>
       <input type="text" name="title" class="form-control" value="<%= typeof title != 'undefined' ? title : '' %>" id="exampleFormControlInput1" placeholder="Title" required>
