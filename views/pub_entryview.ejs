@@ -1,5 +1,5 @@
 <% include ./partials/dashboardnavbar %>
-<h3><%= diary.date.toDateString() %></h3>
+<h3><%= diary.date.toDateString() %> </h3>
+<p>By <%= diary.authorname %></p>
 <h2><%= diary.title %></h2>
 <p class="font-weight-lighter" style='font-size:25px;font-family:"Monotype Corsiva", cursive;white-space: pre-wrap;'><%= diary.body %></p>
-<a href='/entries/edit/<%=diary.id%>' class="btn btn-primary">Edit diary</a>

@@ -54,6 +54,7 @@ app.use((req,res,next) => {
 app.use('/',require('./routes/index'));
 app.use('/users',require('./routes/users'));
 app.use('/entries',require('./routes/entries'));
+app.use('/email',require('./routes/email'));
 
 
 

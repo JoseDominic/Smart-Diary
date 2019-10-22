@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const {ensureAuthenticated} = require('../config/auth');
-const { check, validationResult } = require('express-validator');
 
 //Models
 const Entry = require('../models/Entry');
@@ -100,12 +99,23 @@ router.get('/add',ensureAuthenticated,(req,res) => {
   res.render('addentry',{name:req.user.name});
 })
 
-//route to get a single entry
+
+
+//route to get a single entry (private view)
 router.get('/:id',ensureAuthenticated,(req,res) => {
   Entry.findById(req.params.id,(err,result) => {
     if (err) throw err;
     //console.log(result);
     res.render('entryview',{diary:result,name:req.user.name});
+  });
+});
+
+//route to get a single entry (public view)
+router.get('/public/:id',ensureAuthenticated,(req,res) => {
+  Entry.findById(req.params.id,(err,result) => {
+    if (err) throw err;
+    //console.log(result);
+    res.render('pub_entryview',{diary:result,name:req.user.name});
   });
 });
 
@@ -155,5 +165,52 @@ router.post('/add',ensureAuthenticated,(req,res) => {
 
 });
 
+// Load Edit diary Form
+router.get('/edit/:id', ensureAuthenticated, (req, res) => {
+  Entry.findById(req.params.id, (err, result) => {
+    if (err) console.log(err);
+    if(result.author != req.user.id){
+      req.flash('error_msg', 'Not Authorized');
+      res.redirect('/users/login');
+    }
+    else{
+      res.render('editentry', {
+        name:req.user.name,
+        diary:result
+      });
+    }
+  });
+});
 
-  module.exports = router
+// Update diary 
+router.post('/edit/:id', function(req, res){
+  const { visibility } = req.body;
+  let entry = {};
+  entry.title = req.body.title;
+  entry.author = req.user.id;
+  entry.body = req.body.entry;
+  entry.date = new Date();
+  entry.authorname = req.user.name;
+  if(visibility=='public'){
+    entry.public = true;
+    //console.log(visibility);
+  }
+  else{
+    //console.log(visibility);
+    entry.public = false;
+  }
+
+  let query = {_id:req.params.id}
+
+  Entry.updateOne(query, entry, (err) => {
+    if(err){
+      console.log(err);
+      return;
+    } else {
+      req.flash('success_msg', 'Diary Updated');
+      res.redirect('/dashboard');
+    }
+  });
+});  
+
+module.exports = router

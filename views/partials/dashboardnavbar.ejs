@@ -15,18 +15,25 @@
         <li class="nav-item ">
           <a class="nav-link" href="/entries/add">Add entry</a>
         </li>
-        <li class="nav-item ">
-          <a class="nav-link" href="/entries/search">Search my diary</a>
-        </li>
-        <li class="nav-item ">
-          <a class="nav-link" href="/entries/public">Public posts by Users</a>
-        </li>
-        <li class="nav-item ">
-            <a class="nav-link" href="/users/logout">Logout</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><p class="lead mb-3">Welcome <%=name%></p></a>
-          </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            More
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="nav-link" href="/entries/search">Search my diary</a>
+              <a class="nav-link" href="/entries/public">Public posts by Users</a>
+              <a class="nav-link" href="/email">Email to future you</a>
+          </div>
+      </li>
       </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true"><p class="lead mb-3">Welcome <%=name%></p></a>
+        </li>
+        <li class="nav-item ">
+          <a class="btn btn-secondary" href="/users/logout">Logout</a>
+        </li>
+    </ul>
     </div>
   </nav>

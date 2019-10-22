@@ -3,8 +3,8 @@
     <ul class="list-group">
         <% result.forEach(myfunction); %>
         <%function myfunction(item,index) { %>
-        <li class="list-group-item"><a href='/entries/<%=item.id%>'><%=item.authorname %> - <%=item.date.toDateString()%> - <%=item.title%> </a></li>
-        <% } %>
-    </ul>
+        <li class="list-group-item"><a href='/entries/public/<%=item.id%>'><%=item.authorname %> - <%=item.date.toDateString()%> - <%=item.title%> </a></li>     
+        <% } %>    
+    </ul>     
 
    <% } %>
