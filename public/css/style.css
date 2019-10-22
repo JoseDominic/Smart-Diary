@@ -6,9 +6,9 @@ body {
   font-size: 1rem;
   font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 /*  background-color: skyblue;*/
-    background-image: url("../images/genie.jpg");
-/*  background-position: -500px -1585px;*/
-    background-size:1920px 1080px;
+  background-image: url("../images/genie.jpg");
+ /* background-position: -500px -1585px; */
+  background-size:1920px 1080px;
   background-repeat: no-repeat; }
 
 ::-moz-selection {

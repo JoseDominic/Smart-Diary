@@ -66,7 +66,16 @@ router.post('/search',ensureAuthenticated,(req,res) => {
   if(date && keyword){
     d = new Date(date);
     //console.log(d);
-    Entry.find({author:req.user.id,date:{ "$gte" : d, "$lt" : d.addDays(1) },body:{ $regex: keyword}},(err,result)=>{
+    // Entry.find({author:req.user.id,date:{ "$gte" : d, "$lt" : d.addDays(1) },body:{ $regex: keyword}},(err,result)=>{
+    //   if(err) throw err;
+    //   //console.log(result);
+    //   res.render('allentryview',{result:result,name:req.user.name});
+    // });
+    var query = {$and:[{author:req.user.id},
+      {date:{ "$gte" : d, "$lt" : d.addDays(1) }},
+      {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]} ]}
+    
+    Entry.find(query,(err,result)=>{
       if(err) throw err;
       //console.log(result);
       res.render('allentryview',{result:result,name:req.user.name});
