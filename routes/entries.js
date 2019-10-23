@@ -64,8 +64,8 @@ router.get('/public',ensureAuthenticated,(req,res) => {
   let usernames =[];
   Entry.find({public:true})
     .then(result =>{
-      res.render('public',{usernames:usernames,name:req.user.name,result:result});  
-      }) 
+      res.render('public',{usernames:usernames,name:req.user.name,result:result});
+      })
     .catch(err => console.log(err));
   });
 
@@ -88,7 +88,7 @@ router.post('/search',ensureAuthenticated,(req,res) => {
     var query = {$and:[{author:req.user.id},
       {date:{ "$gte" : d, "$lt" : d.addDays(1) }},
       {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]} ]}
-    
+
     Entry.find(query,(err,result)=>{
       if(err) throw err;
       //console.log(result);
@@ -121,6 +121,18 @@ router.post('/search',ensureAuthenticated,(req,res) => {
 router.get('/add',ensureAuthenticated,(req,res) => {
   res.render('addentry',{name:req.user.name});
 })
+
+//DELETE entry
+router.get('/delete/:id',ensureAuthenticated, function(req,res){
+
+  Entry.findByIdAndDelete(req.params.id, function(err){
+    if(err){
+      console.log('err');
+    }
+    req.flash('success_msg','Entry deleted');
+    res.redirect('/dashboard');
+  });
+});
 
 
 
@@ -167,18 +179,22 @@ router.post('/add',upload.single('picture'),ensureAuthenticated,(req,res) => {
     entry.authorname = req.user.name;
 
     //handling uploaded image
+    if(typeof req.file !='undefined'){
     console.log(req.file);
     var img = fs.readFileSync(req.file.path);
     var encode_image = img.toString('base64');
     // Define a JSONobject for the image attributes for saving to database
-  
+
     var finalImg = {
       contentType: req.file.mimetype,
       image: Buffer.from(encode_image, 'base64')
     };
     entry.img = finalImg;
+    fs.unlink(req.file.path, (err) => {
+      if (err) throw err}); //delete the img once saved to db
+    }
     //console.log(finalImg);
-    //console.log('database'+entry.img.contentType);  
+    //console.log('database'+entry.img.contentType);
 
     if(visibility=='public'){
       entry.public = true;
@@ -194,10 +210,9 @@ router.post('/add',upload.single('picture'),ensureAuthenticated,(req,res) => {
         console.log(err);
         return;
       } else {
-      
-        fs.unlink(req.file.path, (err) => {
-              if (err) throw err}); //delete the img once saved to db
-            
+
+        
+
         req.flash('success_msg','Diary Added');
         res.redirect('/dashboard');
       }
@@ -224,8 +239,8 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
   });
 });
 
-// Update diary 
-router.post('/edit/:id', function(req, res){
+// Update diary
+router.post('/edit/:id',upload.single('picture'),ensureAuthenticated, function(req, res){
   const { visibility } = req.body;
   let entry = {};
   entry.title = req.body.title;
@@ -233,6 +248,23 @@ router.post('/edit/:id', function(req, res){
   entry.body = req.body.entry;
   entry.date = new Date();
   entry.authorname = req.user.name;
+  //console.log('req.file'+req.file);
+  if(typeof req.file !='undefined'){
+    //console.log(req.file);
+    var img = fs.readFileSync(req.file.path);
+    var encode_image = img.toString('base64');
+    // Define a JSONobject for the image attributes for saving to database
+
+    var finalImg = {
+      contentType: req.file.mimetype,
+      image: Buffer.from(encode_image, 'base64')
+    };
+    entry.img = finalImg;
+    fs.unlink(req.file.path, (err) => {
+      if (err) throw err}); //delete the img once saved to db
+  }
+  console.log(finalImg);
+  //console.log('database'+entry.img.contentType);
   if(visibility=='public'){
     entry.public = true;
     //console.log(visibility);
@@ -253,6 +285,6 @@ router.post('/edit/:id', function(req, res){
       res.redirect('/dashboard');
     }
   });
-});  
+});
 
 module.exports = router
