@@ -61,9 +61,13 @@ router.post('/',ensureAuthenticated,(req,res) => {
     
     var transport = nodemailer.createTransport(smtpTransport({
     service: 'gmail',
+    secure:false,//do not use ssl certificate
     auth: {
         user: mailAccountUser,
         pass: mailAccountPassword
+    },
+    tls:{
+      rejectUnauthorized:false //do not fail on invalid certificates
     }
     }));
 
