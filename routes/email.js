@@ -106,7 +106,7 @@ router.post('/',ensureAuthenticated,(req,res) => {
 
     mailDate.setSeconds(temp.getSeconds());
     
-    //console.log(mailDate); //this date is in UTC
+    console.log(mailDate); //this date is in UTC
     
     
     //scheduling job to sent email at a given time
