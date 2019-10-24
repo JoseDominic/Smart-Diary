@@ -69,12 +69,17 @@ router.get('/public',ensureAuthenticated,(req,res) => {
     .catch(err => console.log(err));
   });
 
-//route to view search diary option
+//route to view search diary option private
 router.get('/search',ensureAuthenticated,(req,res) =>{
   res.render('searchentry',{name:req.user.name});
 });
 
-//route to search diary for entry with date or keyword
+//route to view search diary option PUBLIC
+router.get('/public_search',ensureAuthenticated,(req,res) =>{
+  res.render('search_public_post',{name:req.user.name});
+});
+
+//route to search PRIVATE diary for entry with date or keyword
 router.post('/search',ensureAuthenticated,(req,res) => {
   const {date,keyword} =req.body;
   if(date && keyword){
@@ -105,7 +110,7 @@ router.post('/search',ensureAuthenticated,(req,res) => {
     });
   }
   else if(keyword){ //pure keyword search
-    Entry.find({$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]},(err,result) => {
+    Entry.find({$and:[{author:req.user.id},{$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]}]},(err,result) => {
       if(err) throw err;
       //console.log(result);
       res.render('allentryview',{result:result,name:req.user.name});
@@ -116,6 +121,112 @@ router.post('/search',ensureAuthenticated,(req,res) => {
     res.redirect('/entries/search');
   }
 });
+
+
+//route to search PUBLIC diary for entry with date or keyword
+
+router.post('/public_search',ensureAuthenticated,(req,res) => {
+  const {username,date,keyword} =req.body;
+  let author ='';
+  //console.log(username,date,keyword);
+  if(username){
+    //fetch id of the username mentioned
+    User.find({name:username},(err,user) => {
+      if (err) throw err;
+      console.log('returned user',user,'type:',typeof user);
+      if(typeof user[0]=='undefined'){
+        console.log('no user exists');
+        alert=[{msg:'Username you searched does not exist!'}];
+        res.render('search_public_post',{name:req.user.name,errors:alert});
+        
+      }
+      else{
+      console.log('returned user',user);
+      author = user[0].id;
+      console.log('author inside find()',author);
+      //console.log('author outside find()',author);
+    if(date && keyword){
+      d = new Date(date);
+      var query = {$and:[{author:author},{public:true},
+        {date:{ "$gte" : d, "$lt" : d.addDays(1) }},
+        {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]} ]}
+
+      Entry.find(query,(err,result)=>{
+        if(err) throw err;
+        //console.log(result);
+        res.render('public',{diary:result,name:req.user.name});
+      });
+    }
+    else if(date){
+      d = new Date(date);
+      //console.log(d);
+      Entry.find({author:author,public:true,date:{ "$gte" : d, "$lt" : d.addDays(1) }},(err,result)=>{
+        if(err) throw err;
+        //console.log(result);
+        res.render('public',{result:result,name:req.user.name});
+      });
+    }
+    else if(keyword){ //pure keyword search
+      Entry.find({$and:[{author:author,public:true},
+          {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]}
+        ]},
+        (err,result) => {
+        if(err) throw err;
+        //console.log(result);
+        res.render('public',{result:result,name:req.user.name});
+      })
+    }
+    else{
+      Entry.find({author:author},(err,result) => {
+        if (err) throw err;
+        res.render('public',{result:result,name:req.user.name});
+      })   
+    }
+    }
+  });
+    
+  
+  }
+
+  else{
+    if(date && keyword){
+      d = new Date(date);
+      var query = {$and:[{public:true},
+        {date:{ "$gte" : d, "$lt" : d.addDays(1) }},
+        {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]} ]}
+
+      Entry.find(query,(err,result)=>{
+        if(err) throw err;
+        //console.log(result);
+        res.render('public',{result:result,name:req.user.name});
+      });
+    }
+    else if(date){
+      d = new Date(date);
+      //console.log(d);
+      Entry.find({public:true,date:{ "$gte" : d, "$lt" : d.addDays(1) }},(err,result)=>{
+        if(err) throw err;
+        //console.log(result);
+        res.render('public',{result:result,name:req.user.name});
+      });
+    }
+    else if(keyword){ //pure keyword search
+      Entry.find({$and:[{public:true},
+          {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]}
+        ]},
+        (err,result) => {
+        if(err) throw err;
+        //console.log(result);
+        res.render('public',{result:result,name:req.user.name});
+      })
+    }
+    else{
+      req.flash('success_msg','Please fill atleast one field');
+      res.redirect('/entries/search');
+    }
+  }  
+});
+
 
 //render view for adding entries
 router.get('/add',ensureAuthenticated,(req,res) => {

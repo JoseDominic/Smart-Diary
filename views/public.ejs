@@ -1,5 +1,8 @@
  <% include ./partials/dashboardnavbar %>
  <% if (result!=[] && typeof result !='undefined') { %>
+    <div>
+        <a href='/entries/public_search' class="btn btn-secondary">Search for a public diary</a>
+    </div>
     <ul class="list-group">
         <% result.forEach(myfunction); %>
         <%function myfunction(item,index) { %>
