@@ -129,11 +129,11 @@ router.post('/search',ensureAuthenticated,(req,res) => {
 
 router.post('/public_search',ensureAuthenticated,(req,res) => {
   const {username,date,keyword} =req.body;
-  let author ='';
+  let author =[];
   //console.log(username,date,keyword);
   if(username){
     //fetch id of the username mentioned
-    User.find({name:username},(err,user) => {
+    User.find({name:{$regex:username}},(err,user) => {
       if (err) throw err;
       console.log('returned user',user,'type:',typeof user);
       if(typeof user[0]=='undefined'){
@@ -144,12 +144,15 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       }
       else{
       console.log('returned user',user);
-      author = user[0].id;
+      user.forEach((item,index)=>{
+        author.push(item.id);
+      })  
+      //author = user[0].id;
       console.log('author inside find()',author);
       //console.log('author outside find()',author);
     if(date && keyword){
       d = new Date(date);
-      var query = {$and:[{author:author},{public:true},
+      var query = {$and:[{author:{$in:author}},{public:true},
         {date:{ "$gte" : d, "$lt" : d.addDays(1) }},
         {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]} ]}
 
@@ -168,14 +171,14 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
     else if(date){
       d = new Date(date);
       //console.log(d);
-      Entry.find({author:author,public:true,date:{ "$gte" : d, "$lt" : d.addDays(1) }},(err,result)=>{
+      Entry.find({author:{$in:author},public:true,date:{ "$gte" : d, "$lt" : d.addDays(1) }},(err,result)=>{
         if(err) throw err;
         //console.log(result);
         res.render('public',{result:result,name:req.user.name});
       });
     }
     else if(keyword){ //pure keyword search
-      Entry.find({$and:[{author:author,public:true},
+      Entry.find({$and:[{author:{$in:author},public:true},
           {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]}
         ]},
         (err,result) => {
@@ -185,7 +188,7 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       })
     }
     else{
-      Entry.find({author:author,public:true},(err,result) => {
+      Entry.find({author:{$in:author},public:true},(err,result) => {
         if (err) throw err;
         res.render('public',{result:result,name:req.user.name});
       })   
