@@ -1,9 +1,13 @@
 <% include ./partials/dashboardnavbar %>
+<% if (typeof diary[0] == 'undefined') { %>
 <h3><%= diary.date.toDateString() %> </h3>
 <p>By <%= diary.authorname %></p>
 <h2><%= diary.title %></h2>
 <% if(typeof diary.img !='undefined') { %>
 <% if(typeof diary.img.image !='undefined') { %>
-    <img  class="img-fluid" src="data:<%=diary.img.contentType%>;base64,<%=diary.img.image.toString('base64')%>" >
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="data:<%=diary.img.contentType%>;base64,<%=diary.img.image.toString('base64')%>" alt="Card image cap">
+      </div>
 <% } }%>
 <p class="font-weight-lighter" style='font-size:25px;font-family:"Monotype Corsiva", cursive;white-space: pre-wrap;'><%= diary.body %></p>
+<% } %>  

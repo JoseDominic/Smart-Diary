@@ -124,6 +124,8 @@ router.post('/search',ensureAuthenticated,(req,res) => {
 
 
 //route to search PUBLIC diary for entry with date or keyword
+//Bugs to be fixed - check view after empty result returend
+//maked username unique
 
 router.post('/public_search',ensureAuthenticated,(req,res) => {
   const {username,date,keyword} =req.body;
@@ -136,7 +138,7 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       console.log('returned user',user,'type:',typeof user);
       if(typeof user[0]=='undefined'){
         console.log('no user exists');
-        alert=[{msg:'Username you searched does not exist!'}];
+        alert=[{msg:'Username you searched does not exist!.Make sure you entered the username correctly'}];
         res.render('search_public_post',{name:req.user.name,errors:alert});
         
       }
@@ -154,6 +156,12 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       Entry.find(query,(err,result)=>{
         if(err) throw err;
         //console.log(result);
+        // if(typeof result[0]=='undefined'){
+        //   console.log('no entry exists with this date and keyword');
+        //   req.flash('error_msg','No entry exists');
+        //   res.redirect('/entries/public_search');
+          
+        // }
         res.render('public',{diary:result,name:req.user.name});
       });
     }
@@ -177,7 +185,7 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       })
     }
     else{
-      Entry.find({author:author},(err,result) => {
+      Entry.find({author:author,public:true},(err,result) => {
         if (err) throw err;
         res.render('public',{result:result,name:req.user.name});
       })   
@@ -222,7 +230,7 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
     }
     else{
       req.flash('success_msg','Please fill atleast one field');
-      res.redirect('/entries/search');
+      res.redirect('/entries/public_search');
     }
   }  
 });

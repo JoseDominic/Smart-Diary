@@ -1,8 +1,9 @@
 <% include ./partials/dashboardnavbar %>
 <% include ./partials/messages %>
+<p>Search for a public post</p>
 <form action='/entries/public_search' method="POST">
     <div class="form-group">
-        <label for="username">Enter a username</label>
+        <label for="username">Enter a username(case sensitive)</label>
         <input type="text" name="username" class="form-control" id="username" placeholder="Username" >
       </div>
     <div class="form-group">
