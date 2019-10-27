@@ -133,7 +133,7 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
   //console.log(username,date,keyword);
   if(username){
     //fetch id of the username mentioned
-    User.find({name:{$regex:username}},(err,user) => {
+    User.find({name:{$regex:username,$options:"$i"}},(err,user) => {
       if (err) throw err;
       console.log('returned user',user,'type:',typeof user);
       if(typeof user[0]=='undefined'){
