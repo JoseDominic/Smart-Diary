@@ -174,6 +174,7 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       Entry.find({author:{$in:author},public:true,date:{ "$gte" : d, "$lt" : d.addDays(1) }},(err,result)=>{
         if(err) throw err;
         //console.log(result);
+        console.log(result);
         res.render('public',{result:result,name:req.user.name});
       });
     }
