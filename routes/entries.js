@@ -46,6 +46,7 @@ router.get('/',ensureAuthenticated,(req,res) => {
 
 //route to view current week entries
 router.get('/thisweek',ensureAuthenticated,(req,res) =>{
+  let diaries =[];
   User.findById(req.user.id,(err,user) => {
     if(err) throw err;
     if(user){
@@ -53,7 +54,10 @@ router.get('/thisweek',ensureAuthenticated,(req,res) =>{
       Entry.find({author:userid},(err,result) => {
         if(err) throw err;
         //console.log(result);
-        res.render('dashboard',{result:result,name:req.user.name});
+        result.forEach((item,index) => {
+          diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+        });
+        res.render('dashboard',{result:diaries,name:req.user.name});
       })
     }
   })
@@ -61,10 +65,13 @@ router.get('/thisweek',ensureAuthenticated,(req,res) =>{
 
 //route to view public posts
 router.get('/public',ensureAuthenticated,(req,res) => {
-  let usernames =[];
+  let diaries =[];
   Entry.find({public:true})
     .then(result =>{
-      res.render('public',{usernames:usernames,name:req.user.name,result:result});
+      result.forEach((item,index) => {
+        diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+      });
+      res.render('public',{name:req.user.name,result:diaries});
       })
     .catch(err => console.log(err));
   });
@@ -124,8 +131,8 @@ router.post('/search',ensureAuthenticated,(req,res) => {
 
 
 //route to search PUBLIC diary for entry with date or keyword
-//Bugs to be fixed - check view after empty result returend
-//maked username unique
+//to be optimized -no need to search user model,just search authorname field of entry with regexp
+//                -make username unique so that users can be uniquely identified in public posts
 
 router.post('/public_search',ensureAuthenticated,(req,res) => {
   const {username,date,keyword} =req.body;
@@ -154,18 +161,12 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       d = new Date(date);
       var query = {$and:[{author:{$in:author}},{public:true},
         {date:{ "$gte" : d, "$lt" : d.addDays(1) }},
-        {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]} ]}
+        {$or:[{body:{ $regex: keyword,$options:"$i"}},{title:{ $regex: keyword,$options:"$i"}}]} ]}
 
       Entry.find(query,(err,result)=>{
         if(err) throw err;
-        //console.log(result);
-        // if(typeof result[0]=='undefined'){
-        //   console.log('no entry exists with this date and keyword');
-        //   req.flash('error_msg','No entry exists');
-        //   res.redirect('/entries/public_search');
-          
-        // }
-        res.render('public',{diary:result,name:req.user.name});
+        //console.log(result,typeof result,typeof result[0]);
+        res.render('public',{result:result,name:req.user.name});
       });
     }
     else if(date){
@@ -180,7 +181,7 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
     }
     else if(keyword){ //pure keyword search
       Entry.find({$and:[{author:{$in:author},public:true},
-          {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]}
+          {$or:[{body:{ $regex: keyword,$options:"$i"}},{title:{ $regex: keyword,$options:"$i"}}]}
         ]},
         (err,result) => {
         if(err) throw err;
@@ -205,7 +206,7 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       d = new Date(date);
       var query = {$and:[{public:true},
         {date:{ "$gte" : d, "$lt" : d.addDays(1) }},
-        {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]} ]}
+        {$or:[{body:{ $regex: keyword,$options:"$i"}},{title:{ $regex: keyword,$options:"$i"}}]} ]}
 
       Entry.find(query,(err,result)=>{
         if(err) throw err;
@@ -224,7 +225,7 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
     }
     else if(keyword){ //pure keyword search
       Entry.find({$and:[{public:true},
-          {$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]}
+          {$or:[{body:{ $regex: keyword,$options:"$i"}},{title:{ $regex: keyword,$options:"$i"}}]}
         ]},
         (err,result) => {
         if(err) throw err;
