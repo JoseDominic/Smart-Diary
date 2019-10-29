@@ -1,5 +1,8 @@
  <% include ./partials/dashboardnavbar %>
- <% if (result!=[] && typeof result !='undefined') { %>
+ <div>
+  <a href='/entries/search' class="btn btn-secondary">Search my diary</a>
+</div>
+ <% if (typeof result !='undefined' && typeof result[0]!='undefined') { %>
     <ul class="list-group">
         <% result.forEach(myfunction); %>
         <%function myfunction(item,index) { %>
@@ -9,3 +12,12 @@
     </ul>
 
   <% } %>
+
+  <% if (typeof result=='undefined' || typeof result[0]=='undefined') { %>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        You have no diaries matching your search!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+<% } %>   
