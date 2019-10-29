@@ -31,6 +31,7 @@ Date.prototype.addDays = function(days) {
 
 //route to view all entries
 router.get('/',ensureAuthenticated,(req,res) => {
+  let diaries=[]
   User.findById(req.user.id,(err,user) => {
     if(err) throw err;
     if(user){
@@ -38,7 +39,10 @@ router.get('/',ensureAuthenticated,(req,res) => {
       Entry.find({author:userid},(err,result) => {
         if(err) throw err;
         //console.log(result);
-        res.render('allentryview',{result:result,name:req.user.name});
+        result.forEach((item,index) => {
+          diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+        });
+        res.render('allentryview',{result:diaries,name:req.user.name});
       })
     }
   })
@@ -89,6 +93,7 @@ router.get('/public_search',ensureAuthenticated,(req,res) =>{
 //route to search PRIVATE diary for entry with date or keyword
 router.post('/search',ensureAuthenticated,(req,res) => {
   const {date,keyword} =req.body;
+  let diaries = [];
   if(date && keyword){
     d = new Date(date);
     //console.log(d);
@@ -104,7 +109,10 @@ router.post('/search',ensureAuthenticated,(req,res) => {
     Entry.find(query,(err,result)=>{
       if(err) throw err;
       //console.log(result);
-      res.render('allentryview',{result:result,name:req.user.name});
+      result.forEach((item,index) => {
+        diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+      });
+      res.render('allentryview',{result:diaries,name:req.user.name});
     });
   }
   else if(date){
@@ -113,14 +121,20 @@ router.post('/search',ensureAuthenticated,(req,res) => {
     Entry.find({author:req.user.id,date:{ "$gte" : d, "$lt" : d.addDays(1) }},(err,result)=>{
       if(err) throw err;
       //console.log(result);
-      res.render('allentryview',{result:result,name:req.user.name});
+      result.forEach((item,index) => {
+        diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+      });
+      res.render('allentryview',{result:diaries,name:req.user.name});
     });
   }
   else if(keyword){ //pure keyword search
     Entry.find({$and:[{author:req.user.id},{$or:[{body:{ $regex: keyword}},{title:{ $regex: keyword}}]}]},(err,result) => {
       if(err) throw err;
       //console.log(result);
-      res.render('allentryview',{result:result,name:req.user.name});
+      result.forEach((item,index) => {
+        diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+      });
+      res.render('allentryview',{result:diaries,name:req.user.name});
     })
   }
   else{
@@ -137,6 +151,7 @@ router.post('/search',ensureAuthenticated,(req,res) => {
 router.post('/public_search',ensureAuthenticated,(req,res) => {
   const {username,date,keyword} =req.body;
   let author =[];
+  let diaries =[];
   //console.log(username,date,keyword);
   if(username){
     //fetch id of the username mentioned
@@ -166,7 +181,10 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       Entry.find(query,(err,result)=>{
         if(err) throw err;
         //console.log(result,typeof result,typeof result[0]);
-        res.render('public',{result:result,name:req.user.name});
+        result.forEach((item,index) => {
+          diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+        });
+        res.render('public',{result:diaries,name:req.user.name});
       });
     }
     else if(date){
@@ -175,8 +193,10 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       Entry.find({author:{$in:author},public:true,date:{ "$gte" : d, "$lt" : d.addDays(1) }},(err,result)=>{
         if(err) throw err;
         //console.log(result);
-        console.log(result);
-        res.render('public',{result:result,name:req.user.name});
+        result.forEach((item,index) => {
+          diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+        });
+        res.render('public',{result:diaries,name:req.user.name});
       });
     }
     else if(keyword){ //pure keyword search
@@ -186,13 +206,19 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
         (err,result) => {
         if(err) throw err;
         //console.log(result);
-        res.render('public',{result:result,name:req.user.name});
+        result.forEach((item,index) => {
+          diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+        });
+        res.render('public',{result:diaries,name:req.user.name});
       })
     }
     else{
       Entry.find({author:{$in:author},public:true},(err,result) => {
         if (err) throw err;
-        res.render('public',{result:result,name:req.user.name});
+        result.forEach((item,index) => {
+          diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+        });
+        res.render('public',{result:diaries,name:req.user.name});
       })   
     }
     }
@@ -211,7 +237,10 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       Entry.find(query,(err,result)=>{
         if(err) throw err;
         //console.log(result);
-        res.render('public',{result:result,name:req.user.name});
+        result.forEach((item,index) => {
+          diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+        });
+        res.render('public',{result:diaries,name:req.user.name});
       });
     }
     else if(date){
@@ -220,7 +249,10 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
       Entry.find({public:true,date:{ "$gte" : d, "$lt" : d.addDays(1) }},(err,result)=>{
         if(err) throw err;
         //console.log(result);
-        res.render('public',{result:result,name:req.user.name});
+        result.forEach((item,index) => {
+          diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+        });
+        res.render('public',{result:diaries,name:req.user.name});
       });
     }
     else if(keyword){ //pure keyword search
@@ -230,7 +262,10 @@ router.post('/public_search',ensureAuthenticated,(req,res) => {
         (err,result) => {
         if(err) throw err;
         //console.log(result);
-        res.render('public',{result:result,name:req.user.name});
+        result.forEach((item,index) => {
+          diaries.push({id:item.id,authorname:item.authorname,date:item.date,title:item.title});
+        });
+        res.render('public',{result:diaries,name:req.user.name});
       })
     }
     else{
