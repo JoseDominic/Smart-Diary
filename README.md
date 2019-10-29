@@ -5,9 +5,7 @@ See it in action here:
 https://diarygenie.herokuapp.com/
 
 PS:
-1)Letter to yourself feature does not work on heroku due to some problem with scheduling jobs on heroku server.Works fine locally.
-
-2)The background images in the app is yet to be optimized for mobile devices
+Letter to yourself feature does not work on heroku due to some problem with scheduling jobs on heroku server.Works fine locally.
 
 # Setting up
 
