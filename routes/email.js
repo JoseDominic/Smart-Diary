@@ -73,7 +73,7 @@ router.post('/',ensureAuthenticated,(req,res) => {
 
 
       const message = {
-        from: 'genie@diarygenie.com', // Sender address
+        from: 'diarygenie123@gmail.com', // Sender address
         to: req.user.email,         // List of recipients
         subject: title, // Subject line
         text: email // Plain text body
