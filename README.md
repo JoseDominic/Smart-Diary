@@ -1,5 +1,5 @@
 # Diarygenie
-My first nodejs project.A simple diary entry system where users can create accounts and store their diary entries securely.
+A simple diary entry system where users can create accounts and store their diary entries along with images securely.
 Made with nodejs and express
 See it in action here:
 https://diarygenie.herokuapp.com/
